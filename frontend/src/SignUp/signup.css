@@ -1,0 +1,151 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+
+.form-container{
+    background: rgb(209,102,102);
+background: radial-gradient(circle, rgba(209,102,102,1) 0%, rgba(193,193,193,1) 100%);
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.form-container h1{
+    color: white;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+.signup-box{
+    display:flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 700px;
+    background-color: #ffffffbc;
+}
+
+.left-box{
+    padding: 50px;
+    background: #D16666;
+    flex-basis: 50%;
+    flex-grow: 1;
+    color: #fff;
+}
+
+.right-box{
+    padding: 50px;
+    flex-basis: 50%;
+    flex-grow: 1;
+}
+
+.input-box{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #fff;
+    outline: none;
+    color: #fff;
+    font-size: 12px;
+    background:transparent;
+}
+::placeholder{
+    color: #fff;
+}
+
+input[type=checkbox]{
+    margin-top: 15px;
+}
+.left-box label{
+    color: #fff;
+    font-size: 15px;
+}
+.left-box button{
+    width: 100%;
+    background:#fff;
+    padding: 10px;
+    border: 0;
+    outline: none;
+    font-size: 15px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    
+}
+.left-box button:hover{
+    font-weight: 500;
+    background-color: #000;
+    color: #fff;
+
+}
+
+.left-box button span{
+    display: inline-block;
+    width: 0px;
+    overflow: hidden;
+    transition: width 0.5s;
+}
+
+.left-box button:hover span{
+    width: 30px;
+}
+.left-box button:disabled{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: default;
+}
+.left-box button:disabled:hover{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+.left-box button:disabled:hover span{
+    width:0px;
+}
+
+.right-box a{
+    display: block;
+    width: 100%;
+    margin:20px 0;
+    min-width: 250px;
+    color:#fff;
+    font-size: 14px;
+    padding: 15px 30px;
+    text-decoration: none;
+}
+
+.right-box a img{
+    font-size: 18px;
+    margin-right:10px;
+}
+
+.fb-link{
+    background-color: #1778f2;
+}
+.go-link{
+    background-color: #ea4335;
+}
+.tw-link{
+    background-color: #1da1f2;
+}
+
+.login-msg{
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    margin: 15px 0px;
+}
+.login-msg a{
+    color: #D16666;
+    text-decoration: none;
+}
