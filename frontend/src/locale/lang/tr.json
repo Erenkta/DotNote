@@ -1,0 +1,21 @@
+{
+    "Create An Account" : "Hesap Oluştur",
+    "Your Name" :"Adınızı Giriniz",
+    "Your Username":"Kullanıcı Adınızı Giriniz",
+    "Your Email":"E-posta Giriniz",
+    "Create Password" :"Parola Giriniz",
+    "Sign Up" : "Kayıt ol",
+    "Terms" : "Şartlar ve Koşulları kabul ediyorum",
+    "Connect with Google" : "Google ile kayıt ol",
+    "Connect with Facebook" : "Facebook ile kayıt ol",
+    "Connect with Twitter" : "Twitter ile kayıt ol",
+    "AlreadySign" : "Zaten bir hesabın var mı ?",
+    "Login Now" : "Hemen giriş yap",
+    "About":"Hakkında",
+    "Login":"Giriş Yap",
+    "Remember me" : "Beni hatırla",
+    "Login with Google" : "Google ile giriş yap",
+    "Login with Twitter": "Twitter ile giriş yap",
+    "Login with Facebook": "Facebook ile giriş yap"
+
+}

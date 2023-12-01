@@ -10,6 +10,7 @@ function App() {
       <div>
         <Outlet></Outlet>
       </div>
+      
     </>
   );
 }
