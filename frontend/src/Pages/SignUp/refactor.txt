@@ -1,0 +1,21 @@
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+(1)
+
+    signUp(user)
+    .then((response)=>{setSuccessMessage(response.data.message)})
+    .finally(()=>setApiProgress(false));
+    setTimeout(()=>{
+      setSuccessMessage()
+    },2000)
+
+Burda refactor etme sebebimiz asycn await'in okunaklığı arttırması ve kullanımıydı fakat iki kullanım da doğru
+(1)
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+(2)
+
+Inputları component haline getirdik 
+
+(2)
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+(3)

@@ -1,26 +1,67 @@
-import "./home.css"
-import { useNavigate } from "react-router-dom";
-
+import { useCallback, useEffect, useState } from "react";
+import { getUsers } from "./api";
+import { Spinner } from "@/shared/components/Spinner";
+import { UserListItem } from "./components/UserListItem";
 
 export default function Home() {
-  let navigate = useNavigate()
-  const gotoSignup = () =>{
-    let path = "/signup"
-    navigate(path)
-  }
+  const [userPage, setUserPage] = useState({
+    content: [],
+    first: false,
+    last: false,
+    number: 0,
+  });
+
+  const [apiProgress, setApiProgress] = useState(false);
+
+  const loadUsers = useCallback(async (number = 0) => {
+    //nedir nasıl kullanılır ?
+    setApiProgress(true);
+    try {
+      const response = await getUsers(number);
+      setUserPage(response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setApiProgress(false);
+    }
+  }, []);
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
   return (
-    <div className="banner">
-      <div className="content">
-        <h1>What is DotNote ? </h1>
-        <p>DotNote is a website that you can store your notes, todos and daily reminders.</p>
-      </div>
-      <div className="content">
-        <h1>Why we should use Dotnote</h1>
-        <p>Because of user friendly UI , simple usage and its better that paper !</p>
-      </div>
-      <button onClick={gotoSignup}>Get Started</button>
+    <div className="card">
+      <div className="card-header text-center fs-4">UserList</div>
+      <ul className="list-group list-group-flush">
+        {userPage.content.map((user) => (
+          <UserListItem user={user}/>
+        ))}
+        <div className="cart-footer text-center">
+          {!apiProgress && !userPage.first && (
+            <button
+              className="btn btn-outline-secondary btn-sm float-start"
+              //(disabled={userPage.first}
+              onClick={() => {
+                loadUsers(userPage.number - 1);
+              }}
+            >
+              Prev
+            </button>
+          )}
+          {apiProgress && <Spinner />}
+          {!apiProgress && !userPage.last && (
+            <button
+              className="btn btn-outline-secondary btn-sm float-end"
+              //disabled={userPage.last}
+              onClick={() => {
+                loadUsers(userPage.number + 1);
+              }}
+            >
+              Next
+            </button>
+          )}
+        </div>
+      </ul>
     </div>
-    
-  )
+  );
 }

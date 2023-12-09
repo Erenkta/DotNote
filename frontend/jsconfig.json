@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths":{
+            "@/*":["./src/*"] //vite.config.js içine tanıttığımızı buraya da haber ettik uyuşmazlık olmasın diye   
+        }
+    }
+}

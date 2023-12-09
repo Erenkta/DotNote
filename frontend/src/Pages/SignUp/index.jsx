@@ -1,138 +1,164 @@
-
-import "./signup.css";
-import facebook from "./assets/facebook.svg"
-import twitter from "./assets/twitter.svg"
-import google from  "./assets/google.svg"
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { signUp } from "./api";
 import Input from "./components/Input";
-import { signup as kayit } from "./api";
-
-//Localization
 import { useTranslation } from "react-i18next";
-//Toastify import
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Alert } from "@/shared/components/Alert";
+import { Spinner } from "@/shared/components/Spinner"; // vite.config.js içindeki koyduğumuz alias ile yaptık
+import Submit from "@/shared/components/Submit";
 
-export default function SignUp() {
-  const [name,setName] = useState("");
-  const [username,setUsername] = useState("")
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  const [termsAndConditions,setTermsAndConditions] = useState(false)
-  const navigate = useNavigate();
-  const [validationErrors,setValidationErrors] = useState({})
+function SignUp() {
+  // Eskiden functional Component ile Class component arasında işlevsel farklar vardı fakat artık bu kalktı
+  //Fonksiyonel Componentler daha fazla kullanılmaya başlandı
 
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [apiProgress, setApiProgress] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errors, setErrors] = useState({});
+  const [generalError, setGeneralError] = useState("");
   const {t} = useTranslation();
-  let lang = localStorage.getItem("lang")
+  
 
-  useEffect(()=>{
-    setValidationErrors((lastErrors)=>{
-      return{
+
+  useEffect(() => {
+    setErrors((lastErrors) => {
+      return {
+        // Buradaki temel mantık objenin içinden sadece spesifik bir şeyi güncellemek istediğimizde bunu callback dediğimiz fonksiyonlar ile yapmak
+        ...lastErrors, //bize güncellenmeden önceki halini veriyor biz de bunu kopyala yapıştır gibi buraya yapıştırıyoruz
+        username: undefined,
+      };
+    });
+  }, [username]); // buradaki listeye bir şey vermezsek sadece component'ın ilk anında çalışıp bırakıcak
+
+  useEffect(() => {
+    setErrors((lastErrors) => {
+      return {
         ...lastErrors,
-        name:undefined
-      }
-    })
-  },[name])
+        email: undefined,
+      };
+    });
+  }, [email]);
 
-  useEffect(()=>{
-    setValidationErrors((lastErrors)=>{
-      return{
+  useEffect(() => {
+    setErrors((lastErrors) => {
+      return {
         ...lastErrors,
-        username:undefined
-      }
-    })
-  },[username])
+        password: undefined,
+      };
+    });
+  },[password]);
 
-  useEffect(()=>{
-    setValidationErrors((lastErrors)=>{
-      return{
-        ...lastErrors,
-        email:undefined
-      }
-    })
-  },[email])
+  // let passwordError = password === passwordRepeat ? "" : "Password Mismatch" gerekli gereksiz sürekli render edilecek ve performans sorununa yol açıcak
+  let passwordRepeatError = useMemo(()=>{ //UseMemo sadece alttaki değişkenlerin inputu değişirse işlem yapıcak yani gereksiz yere çalışmanın önüne geçecek
+    return password !== passwordRepeat ? t('Password Mismatch') : ''
+  },[password,passwordRepeat])
 
-  useEffect(()=>{
-    setValidationErrors((lastErrors)=>{
-      return{
-        ...lastErrors,
-        password:undefined
-      }
-    })
-  },[password])
-
-
-  const showToast = (message,status) =>{
-    if(status == "OK"){
-      toast.success(message,{
-        position: toast.POSITION.BOTTOM_RIGHT,
-        autoClose:1000
-      })
-    }else{
-      toast.error(message,{
-        position: toast.POSITION.BOTTOM_RIGHT,
-        autoClose:3000
-      })
-    }
-
-  }
-
-
-  const signup = async (event) =>{
-    event.preventDefault();
+  const onSubmit = async (event) => {
+    event.preventDefault(); // event bize form'dan geldi ve browser'in form ile ilgili işlem yapıp kendini sıfırlamasını engelledik
+    //bundan sonra browser form'u dönüştürmeye uğraşmayacak ve sayfa yenilenmeyecek
+    setGeneralError();
+    setApiProgress(true);
     const user = {
-      name,
       username,
       email,
-      password
-    }
-    lang === "en" ? lang = lang+"_EN" : lang
-    console.log(lang);
-    try{
-      const response  = await kayit(user,lang)
-      //console.log(response);
-      if(response.statusText === 'OK'){
-        showToast(response.data.message,response.statusText)
-        setTimeout(()=>{
-          let path = "/login"
-          navigate(path)
-        },2000)
+      password,
+    };
+    try {
+      //refactor (1)
+      const response = await signUp(user);
+      setSuccessMessage(response.data.message);
+    } catch (error) {
+      // Buradaki error içinde bir data var
+      console.log(error);
+      if (error.response?.data ) {
+        // Error varsa ve error code 400 ise
+        if( error.response.data.status === 400){
+          setErrors(error.response.data.validationErrors);
+        }else{
+        setGeneralError(error.response.data.message)
+        }
+      } 
+      else {
+        setGeneralError(t("Generic Error"));
       }
-    }catch(e){
-      console.log(e);
-      showToast(e.response.data.message,e.response.statusText)
-      setValidationErrors(e.response.data.validationErrors)
+    } finally {
+      setApiProgress(false);
+      setTimeout(() => {
+        setSuccessMessage();
+      }, 2000);
     }
-    
-
-  }
+  };
 
 
   return (
-    <div className="form-container">
-      <h1> {t("Create An Account")}</h1>
-      <div className="signup-box">
-        <div className="left-box">
-          <form >
-            <Input type={"text"} error={validationErrors.name} onChange={(event)=>{setName(event.target.value);console.log(event.target);}} title={t("Your Name")}></Input>
-            <Input type={"text"} error={validationErrors.username} onChange={(event)=>{setUsername(event.target.value)}}  title={t("Your Username")} />
-            <Input type={"text"} error={validationErrors.email} onChange={(event)=>{setEmail(event.target.value)}} title={t("Your Email")} />
-            <Input type={"password"} error={validationErrors.password} onChange={(event)=>{setPassword(event.target.value)}} title={t("Create Password")}/>
-            <input type="checkbox" onClick={()=>{setTermsAndConditions(!termsAndConditions)}} id="terms"/>
-            <label htmlFor="terms">{t("Terms")}</label>
+    <div className="container">
+      <div className="col-lg-6 offset-lg-3 col-sm-8 offset-sm-2">
+        <form className="card " onSubmit={onSubmit}>
+          {" "}
+          {/* Form'u enter ile yollamak için onSubmit kullanabilirsin*/}
+          {/* Sadece bir tane parent dönebiliriz ondan dolayı bunu fragment içine aldık*/}
+          <div className="text-center card-header">
+            <h1>{t('Sign Up')}</h1>
+          </div>
+          <div className="card-body">
+            <Input
+              label={t("Username")}
+              id="username"
+              type="text"
+              error={errors.username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            <Input
+              label={t("Email")}
+              id="email"
+              type="text"
+              error={errors.email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <Input
+              label={t("Password")}
+              id="password"
+              type="password"
+              error={errors.password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <Input
+              label={t("Password Repeat")}
+              id="passwordRepeat"
+              type="password"
+              error={passwordRepeatError}
+              onChange={() => {
+                setPasswordRepeat(event.target.value)
+              }
+            }
+            />
+            {successMessage && (
+              <Alert>{successMessage}</Alert>
+            )}
+            {generalError && (
+              <Alert styleType="danger">{generalError}</Alert>
+            )}
+            <div className="text-center">
+              <Submit
+                disabled={
+                  !password || password !== passwordRepeat 
+                }
+                apiProgress={apiProgress}
+                sm={true}
+                title={t("Sign Up")}
+              />
 
-            <button onClick={()=>{signup(event)}} disabled={!termsAndConditions}>{t("Sign Up")}<span>&#x2192;</span></button>
-            <ToastContainer />
-          </form>
-        </div>
-        <div className="right-box">
-          <a href="" className="go-link" ><img src={google} alt="google"/>{t("Connect with Google")}</a>
-          <a href="" className="tw-link"><img src={twitter} alt="twitter"/>{t("Connect with Twitter")}</a>
-          <a href="" className="fb-link"><img src={facebook} alt="facebook"/>{t("Connect with Facebook")}</a>
-        </div>
+
+     
+
+            </div>
+          </div>
+        </form>
       </div>
-      <p className="login-msg">{t("AlreadySign")} <Link to="/login">{t("Login Now")}</Link></p>
     </div>
   );
 }
+
+export default SignUp;

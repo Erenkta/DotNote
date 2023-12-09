@@ -1,19 +1,20 @@
-import React from 'react'
-
-export default function Input(props) {
-const {onChange,title,type,error} = props
-
-  return (
-    <>
-      <input type={type}
-        onChange={onChange}
-         placeholder={title}
-         required 
-         className={error ? "input-box is-invalid": "input-box"}/>
-         <div className="invalid-feedback">
-         {error}
-       </div>   
-    </>
-
+export default function Input(props) { //tekrardan hatırlatma default ise {} kullanmana gerek yok 
+    const {label,id,type,error,onChange} = props
+  return ( //(2)
+    <div className="mb-3">
+    <label className="form-label" htmlFor={id}>
+       {label}
+    </label>
+    <input
+      className={error ?"form-control is-invalid" : "form-control"}
+      id={id}
+      type={type}
+      onChange={onChange}
+    />
+    {/* input'lar event'i otomatik olarak verir bunu ister  ek yukarıdaki gibi kullanabiliriz */}
+    <div className="invalid-feedback">
+      {error}
+    </div>
+  </div>
   )
 }
