@@ -1,0 +1,4 @@
+//Burada bootstrap'in style'larını ezme işlemi yapabiliriz
+//Dikkat edilmesi gereken yer bu ezme işlemini importtan önce yapmak
+$primary : #808;
+@import "node_modules/bootstrap/scss/bootstrap";

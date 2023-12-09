@@ -1,0 +1,11 @@
+{
+    "Sign Up":"Kayıt ol",
+    "Email" : "Email",
+    "Username" : "Kullanıcı adı",
+    "Password" : "Şifre",
+    "Password Repeat" : "Şifre Tekrar",
+    "Password Mismatch" : "Şifreler Eşleşmiyor",
+    "GenericError" : "Bir hata oluştu.Lütfen tekrar deneyin",
+    "User Not Found" : "Kullanıcı Bulunamadı",
+    "Login" : "Giriş Yap"
+  }

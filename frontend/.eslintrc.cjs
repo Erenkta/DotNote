@@ -16,7 +16,8 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'no-unused-vars': 'off',
-    "react/prop-types": "off"
-      },
+    'react/jsx-no-target-blank':false,
+    
+  },
 }
+// Eslint kuralları koyup çıkarabiliriz sitesinde docs var
